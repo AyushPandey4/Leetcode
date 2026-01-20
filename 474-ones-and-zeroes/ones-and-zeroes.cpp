@@ -24,21 +24,42 @@ public:
     }
 
     int findMaxForm(vector<string>& strs, int m, int n) {
-        int k = strs.size();
-        vector<pair<int, int>> cnt(k);
+        // int k = strs.size();
+        // vector<pair<int, int>> cnt(k);
 
-        for (int i = 0; i < k; i++) {
-            int z = 0, o = 0;
-            for (char c : strs[i]) {
+        // for (int i = 0; i < k; i++) {
+        //     int z = 0, o = 0;
+        //     for (char c : strs[i]) {
+        //         if (c == '0')
+        //             z++;
+        //         else
+        //             o++;
+        //     }
+        //     cnt[i] = {z, o};
+        // }
+        // vector<vector<vector<int>>> dp(
+        //     k, vector<vector<int>>(m + 1, vector<int>(n + 1, -1)));
+        // return solve(k - 1, m, n, cnt, dp);
+        vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+
+        for (string& s : strs) {
+
+            int zeros = 0, ones = 0;
+            for (char c : s) {
                 if (c == '0')
-                    z++;
+                    zeros++;
                 else
-                    o++;
+                    ones++;
             }
-            cnt[i] = {z, o};
+
+            // 0/1 knapsack → backward loops
+            for (int z = m; z >= zeros; z--) {
+                for (int o = n; o >= ones; o--) {
+                    dp[z][o] = max(dp[z][o], 1 + dp[z - zeros][o - ones]);
+                }
+            }
         }
-        vector<vector<vector<int>>> dp(
-            k, vector<vector<int>>(m + 1, vector<int>(n + 1, -1)));
-        return solve(k - 1, m, n, cnt, dp);
+
+        return dp[m][n];
     }
 };
