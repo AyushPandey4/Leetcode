@@ -16,18 +16,26 @@ public:
         if (!root)
             return 0;
 
-        // leaf node
-        if (!root->left && !root->right)
-            return 1;
+        queue<TreeNode*> q;
+        q.push(root);
+        int depth = 1;
 
-        // if one side is missing, take the other
-        if (!root->left)
-            return 1 + minDepth(root->right);
+        while (!q.empty()) {
+            int sz = q.size();
+            while (sz--) {
+                TreeNode* node = q.front();
+                q.pop();
 
-        if (!root->right)
-            return 1 + minDepth(root->left);
+                if (!node->left && !node->right)
+                    return depth;
 
-        // both sides exist
-        return 1 + min(minDepth(root->left), minDepth(root->right));
+                if (node->left)
+                    q.push(node->left);
+                if (node->right)
+                    q.push(node->right);
+            }
+            depth++;
+        }
+        return 0;
     }
 };
