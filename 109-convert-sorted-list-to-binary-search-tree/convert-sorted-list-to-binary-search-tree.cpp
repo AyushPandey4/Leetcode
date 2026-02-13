@@ -1,31 +1,40 @@
 class Solution {
 public:
-    TreeNode* sortedListToBST(ListNode* head) {
-        if (!head) return NULL;
-        if (!head->next) return new TreeNode(head->val);
+    ListNode* curr;
 
-        // Find middle using slow-fast
-        ListNode* slow = head;
-        ListNode* fast = head;
-        ListNode* prev = NULL;
-
-        while (fast && fast->next) {
-            prev = slow;
-            slow = slow->next;
-            fast = fast->next->next;
+    int getSize(ListNode* head) {
+        int count = 0;
+        while (head) {
+            count++;
+            head = head->next;
         }
+        return count;
+    }
 
-        // slow is middle
-        if (prev) prev->next = NULL;  // cut left half
+    TreeNode* build(int left, int right) {
+        if (left > right) return NULL;
 
-        TreeNode* root = new TreeNode(slow->val);
+        int mid = left + (right - left) / 2;
 
-        // If head == slow, it means only one element
-        if (head != slow)
-            root->left = sortedListToBST(head);
+        // Build left subtree
+        TreeNode* leftChild = build(left, mid - 1);
 
-        root->right = sortedListToBST(slow->next);
+        // Current node becomes root
+        TreeNode* root = new TreeNode(curr->val);
+        curr = curr->next;
+
+        // Attach left
+        root->left = leftChild;
+
+        // Build right subtree
+        root->right = build(mid + 1, right);
 
         return root;
+    }
+
+    TreeNode* sortedListToBST(ListNode* head) {
+        int n = getSize(head);
+        curr = head;
+        return build(0, n - 1);
     }
 };
