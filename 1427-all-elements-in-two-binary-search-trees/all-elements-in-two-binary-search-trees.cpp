@@ -1,36 +1,33 @@
 class Solution {
 public:
-    void inorder(TreeNode* root, vector<int>& arr) {
-        if (!root)
-            return;
-        inorder(root->left, arr);
-        arr.push_back(root->val);
-        inorder(root->right, arr);
-    }
-
-    vector<int> merge(vector<int>& a, vector<int>& b) {
-        vector<int> res;
-        int i = 0, j = 0;
-
-        while (i < a.size() && j < b.size()) {
-            if (a[i] < b[j])
-                res.push_back(a[i++]);
-            else
-                res.push_back(b[j++]);
+    void pushLeft(TreeNode* root, stack<TreeNode*>& st) {
+        while (root) {
+            st.push(root);
+            root = root->left;
         }
-
-        while (i < a.size())
-            res.push_back(a[i++]);
-        while (j < b.size())
-            res.push_back(b[j++]);
-
-        return res;
     }
 
     vector<int> getAllElements(TreeNode* root1, TreeNode* root2) {
-        vector<int> a, b;
-        inorder(root1, a);
-        inorder(root2, b);
-        return merge(a, b);
+        stack<TreeNode*> s1, s2;
+        vector<int> result;
+
+        pushLeft(root1, s1);
+        pushLeft(root2, s2);
+
+        while (!s1.empty() || !s2.empty()) {
+
+            stack<TreeNode*>& st =
+                s2.empty() || (!s1.empty() && s1.top()->val <= s2.top()->val)
+                    ? s1
+                    : s2;
+
+            TreeNode* node = st.top();
+            st.pop();
+
+            result.push_back(node->val);
+            pushLeft(node->right, st);
+        }
+
+        return result;
     }
 };
