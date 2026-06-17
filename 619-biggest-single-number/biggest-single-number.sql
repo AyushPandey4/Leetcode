@@ -1,8 +1,5 @@
-SELECT COALESCE(
-  (SELECT num
-  FROM MyNumbers
-  GROUP BY num
-  HAVING COUNT(num) = 1
-  ORDER BY num DESC
-  LIMIT 1), null) 
-  AS num
+select if(count(num) = 1, num, null) as num 
+from MyNumbers 
+group by num 
+order by num desc 
+limit 1
