@@ -8,15 +8,17 @@ public:
             if (nums[mid] == target)
                 return mid;
             else if (nums[l] <= nums[mid]) {
-                if (target >= nums[l] && target <= nums[mid])
+                if (nums[l] <= target && nums[mid] >= target) {
                     h = mid - 1;
-                else
+                } else {
                     l = mid + 1;
+                }
             } else {
-                if (target >= nums[mid] && target <= nums[h])
+                if (nums[mid] <= target && nums[h] >= target) {
                     l = mid + 1;
-                else
+                } else {
                     h = mid - 1;
+                }
             }
         }
         return -1;
