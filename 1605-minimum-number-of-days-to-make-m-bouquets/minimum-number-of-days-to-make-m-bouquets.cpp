@@ -1,34 +1,34 @@
 class Solution {
 public:
-    bool help(vector<int>& bloomDay, int m, int k, int day) {
-        int curr = 0, bou = 0;
+    bool help(vector<int>& bloomDay, int m, int k, int days) {
+        int curr = 0;
+        int b = 0;
         for (int i = 0; i < bloomDay.size(); i++) {
-            if (bloomDay[i] <= day) {
+            if (bloomDay[i] <= days) {
                 curr++;
                 if (curr == k) {
-                    bou++;
+                    b++;
                     curr = 0;
                 }
             } else {
                 curr = 0;
             }
         }
-        return bou >= m;
+        return b >= m;
     }
     int minDays(vector<int>& bloomDay, int m, int k) {
-        if (bloomDay.size() < (long long)m * k)
-            return -1;
         int n = bloomDay.size();
-        int low = 1;
-        int high = *max_element(bloomDay.begin(), bloomDay.end());
+        if (n < (long long)m * k)
+            return -1;
+        int l = 1, h = *max_element(bloomDay.begin(), bloomDay.end());
         int ans = -1;
-        while (low <= high) {
-            int mid = low + (high - low) / 2;
+        while (l <= h) {
+            int mid = l + (h - l) / 2;
             if (help(bloomDay, m, k, mid)) {
                 ans = mid;
-                high = mid - 1;
+                h = mid - 1;
             } else {
-                low = mid + 1;
+                l = mid + 1;
             }
         }
         return ans;
